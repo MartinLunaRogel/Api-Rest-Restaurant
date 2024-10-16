@@ -1,26 +1,42 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateAlimentoDto } from './dto/create-alimento.dto';
 import { UpdateAlimentoDto } from './dto/update-alimento.dto';
+import { Alimento } from './entities/alimento.entity';
 
 @Injectable()
 export class AlimentosService {
-  create(createAlimentoDto: CreateAlimentoDto) {
-    return 'This action adds a new alimento';
-  }
+    constructor(
+        @InjectRepository(Alimento)
+        private alimentoRepository: Repository<Alimento>,
+    ) {}
 
-  findAll() {
-    return `This action returns all alimentos`;
-  }
+    create(createAlimentoDto: CreateAlimentoDto) {
+        const alimento = this.alimentoRepository.create(createAlimentoDto);
+        return this.alimentoRepository.save(alimento);
+    }
 
-  findOne(id: number) {
-    return `This action returns a #${id} alimento`;
-  }
+    findAll() {
+        return this.alimentoRepository.find();
+    }
 
-  update(id: number, updateAlimentoDto: UpdateAlimentoDto) {
-    return `This action updates a #${id} alimento`;
-  }
+    findOne(id: number) {
+        const alimento = this.alimentoRepository.findOneBy({ idProducto: id });
+        if (!alimento) throw new NotFoundException("Alimento no encontrado");
+        return alimento;
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} alimento`;
-  }
+    async update(id: number, updateAlimentoDto: UpdateAlimentoDto) {
+        const alimentoToUpdate = await this.alimentoRepository.preload({
+            idProducto: id,
+            ...updateAlimentoDto,
+        });
+        if (!alimentoToUpdate) throw new NotFoundException("Alimento no encontrado");
+        return this.alimentoRepository.save(alimentoToUpdate);
+    }
+
+    remove(id: number) {
+        return this.alimentoRepository.delete({ idProducto: id });
+    }
 }
