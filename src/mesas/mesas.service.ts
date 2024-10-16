@@ -1,26 +1,41 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateMesaDto } from './dto/create-mesa.dto';
 import { UpdateMesaDto } from './dto/update-mesa.dto';
+import { Mesa } from './entities/mesa.entity';
 
 @Injectable()
 export class MesasService {
+  constructor(
+    @InjectRepository(Mesa)
+    private mesasRepository: Repository<Mesa>,
+  ) {}
+
   create(createMesaDto: CreateMesaDto) {
-    return 'This action adds a new mesa';
+    return this.mesasRepository.save(createMesaDto);
   }
 
   findAll() {
-    return `This action returns all mesas`;
+    return this.mesasRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} mesa`;
+  async findOne(id: number) {
+    const mesa = await this.mesasRepository.findOneBy({ idMesa: id });
+    if (!mesa) throw new NotFoundException("Mesa no encontrada");
+    return mesa;
   }
 
-  update(id: number, updateMesaDto: UpdateMesaDto) {
-    return `This action updates a #${id} mesa`;
+  async update(id: number, updateMesaDto: UpdateMesaDto) {
+    const mesaToUpdate = await this.mesasRepository.preload({
+      idMesa: id,
+      ...updateMesaDto,
+    });
+    if (!mesaToUpdate) throw new NotFoundException("Mesa no encontrada");
+    return this.mesasRepository.save(mesaToUpdate);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} mesa`;
+    return this.mesasRepository.delete({ idMesa: id });
   }
 }
