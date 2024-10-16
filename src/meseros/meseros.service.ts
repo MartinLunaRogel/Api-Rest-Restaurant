@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'; 
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateMeseroDto } from './dto/create-mesero.dto';
@@ -15,46 +15,71 @@ export class MeserosService {
     private mesasRepository: Repository<Mesa>,
   ) {}
 
-  async create(createMeseroDto: CreateMeseroDto) {
-    const { idMesas, ...restoMesero } = createMeseroDto;
+  async create(createMeseroDto: CreateMeseroDto): Promise<Mesero> {
+    const mesas = [];
 
-    // Validar que las mesas existan
-    const mesas = await this.mesasRepository.findByIds(idMesas);
-    if (mesas.length !== idMesas.length) {
-      throw new NotFoundException('Una o más mesas no existen');
+    // Itera sobre los ID de mesas para verificar que existen
+    for (const idMesa of createMeseroDto.idMesas) {
+      const mesa = await this.mesasRepository.findOne({ where: { idMesa } });
+
+      if (!mesa) {
+        throw new NotFoundException(`La mesa con ID ${idMesa} no existe`);
+      }
+      mesas.push(mesa);
     }
 
-    const nuevoMesero = this.meserosRepository.create({ ...restoMesero, idMesas });
-    return this.meserosRepository.save(nuevoMesero);
+    // Crea un nuevo mesero y asigna las mesas verificadas
+    const mesero = this.meserosRepository.create({
+      ...createMeseroDto,
+      mesas, // Asigna el array de mesas
+    });
+
+    // Guarda el mesero en la base de datos
+    return await this.meserosRepository.save(mesero);
   }
 
   findAll() {
-    return this.meserosRepository.find({ relations: ['idMesas'] });
+    return this.meserosRepository.find({ relations: ['mesas'] }); // Cambiado de idMesas a mesas
   }
 
   async findOne(id: string) {
-    const mesero = await this.meserosRepository.findOne({ where: { idMesero: id }, relations: ['idMesas'] });
+    const mesero = await this.meserosRepository.findOne({ where: { idMesero: id }, relations: ['mesas'] }); // Cambiado de idMesas a mesas
     if (!mesero) {
       throw new NotFoundException('Mesero no encontrado');
     }
     return mesero;
   }
 
-  async update(id: string, updateMeseroDto: UpdateMeseroDto) {
-    const meseroExistente = await this.meserosRepository.preload({
-      idMesero: id,
-      ...updateMeseroDto,
-    });
-
+  async update(id: string, updateMeseroDto: UpdateMeseroDto): Promise<Mesero> {
+    const meseroExistente = await this.meserosRepository.findOne({ where: { idMesero: id }, relations: ['mesas'] });
+    
     if (!meseroExistente) {
       throw new NotFoundException('Mesero no encontrado');
     }
-
+  
+    // Si se proporciona idMesas en la solicitud, agregarlas
+    if (updateMeseroDto.idMesas) {
+      for (const idMesa of updateMeseroDto.idMesas) {
+        const mesa = await this.mesasRepository.findOne({ where: { idMesa } });
+        if (!mesa) {
+          throw new NotFoundException(`La mesa con ID ${idMesa} no existe`);
+        }
+        // Comprobar si la mesa ya está asociada antes de agregarla
+        if (!meseroExistente.mesas.some(existingMesa => existingMesa.idMesa === mesa.idMesa)) {
+          meseroExistente.mesas.push(mesa); // Agregar la instancia de mesa
+        }
+      }
+    }
+  
     return this.meserosRepository.save(meseroExistente);
   }
+  
+  
+  
 
   async remove(id: string) {
     const mesero = await this.findOne(id);
+    await this.mesasRepository.update({idMesero: mesero}, {idMesero: null});
     return this.meserosRepository.remove(mesero);
   }
 }

@@ -1,4 +1,4 @@
-import { IsString, IsArray } from 'class-validator';
+import { IsString, IsOptional, IsArray, IsUUID } from 'class-validator';
 
 export class CreateMeseroDto {
   @IsString()
@@ -7,6 +7,7 @@ export class CreateMeseroDto {
   @IsString()
   apellido: string;
 
+  @IsOptional()
   @IsArray()
-  idMesas: number[]; // Array de ID de mesas que el mesero atiende
+  idMesas?: number[]; // Asegúrate de que este campo sea opcional
 }

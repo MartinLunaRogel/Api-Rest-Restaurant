@@ -13,5 +13,5 @@ export class Mesero {
   apellido: string;
 
   @OneToMany(() => Mesa, (mesa) => mesa.idMesero, { cascade: true })
-  idMesas: number[]; // Array de ID de mesas
+  mesas: Mesa[]; // Cambiado a una relación con la entidad Mesa
 }

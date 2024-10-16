@@ -1,14 +1,13 @@
-import { IsString, IsNumber } from 'class-validator';
+import { IsString, IsNumber, isArray, IsOptional } from 'class-validator';
 
 export class CreateMesaDto {
-  @IsNumber()
-  idMesa: number;
-
   @IsString()
   tamanoMesa: string;
 
+  @IsOptional()
   @IsNumber()
   totalCuenta: number;
 
-  idProducto: number[]; // Array de idProducto
+  @IsOptional()
+  idProducto: number[];
 }
