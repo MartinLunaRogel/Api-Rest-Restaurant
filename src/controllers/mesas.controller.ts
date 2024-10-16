@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { MesasService } from './mesas.service';
-import { CreateMesaDto } from './dto/create-mesa.dto';
-import { UpdateMesaDto } from './dto/update-mesa.dto';
+import { MesasService } from 'src/services/mesas.service';
+import { CreateMesaDto } from 'src/dtos/create-mesa.dto';
+import { UpdateMesaDto } from 'src/dtos/update-mesa.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Mesas')

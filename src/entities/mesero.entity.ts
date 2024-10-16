@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { Mesa } from '../../mesas/entities/mesa.entity';
+import { Mesa } from './mesa.entity';
 
 @Entity()
 export class Mesero {

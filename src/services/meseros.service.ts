@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'; 
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateMeseroDto } from './dto/create-mesero.dto';
-import { UpdateMeseroDto } from './dto/update-mesero.dto';
-import { Mesero } from './entities/mesero.entity';
-import { Mesa } from '../mesas/entities/mesa.entity';
+import { CreateMeseroDto } from 'src/dtos/create-mesero.dto';
+import { UpdateMeseroDto } from 'src/dtos/update-mesero.dto';
+import { Mesero } from 'src/entities/mesero.entity';
+import { Mesa } from 'src/entities/mesa.entity';
 
 @Injectable()
 export class MeserosService {

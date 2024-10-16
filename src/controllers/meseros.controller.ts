@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { MeserosService } from './meseros.service';
-import { CreateMeseroDto } from './dto/create-mesero.dto';
-import { UpdateMeseroDto } from './dto/update-mesero.dto';
+import { MeserosService } from 'src/services/meseros.service';
+import { CreateMeseroDto } from 'src/dtos/create-mesero.dto';
+import { UpdateMeseroDto } from 'src/dtos/update-mesero.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Meseros')

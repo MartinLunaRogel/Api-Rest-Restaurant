@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { AlimentosService } from './alimentos.service';
-import { CreateAlimentoDto } from './dto/create-alimento.dto';
-import { UpdateAlimentoDto } from './dto/update-alimento.dto';
+import { AlimentosService } from 'src/services/alimentos.service';
+import { CreateAlimentoDto } from 'src/dtos/create-alimento.dto';
+import { UpdateAlimentoDto } from 'src/dtos/update-alimento.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Alimentos y Bebidas')

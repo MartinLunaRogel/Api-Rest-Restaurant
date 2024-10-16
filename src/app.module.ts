@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { MeserosModule } from './meseros/meseros.module';
-import { MesasModule } from './mesas/mesas.module';
-import { AlimentosModule } from './alimentos/alimentos.module';
+import { MeserosModule } from 'src/modules/meseros.module';
+import { MesasModule } from 'src/modules/mesas.module';
+import { AlimentosModule } from 'src/modules/alimentos.module';
 
 
 @Module({

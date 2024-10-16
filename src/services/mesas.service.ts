@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateMesaDto } from './dto/create-mesa.dto';
-import { UpdateMesaDto } from './dto/update-mesa.dto';
-import { Mesa } from './entities/mesa.entity';
+import { CreateMesaDto } from 'src/dtos/create-mesa.dto';
+import { UpdateMesaDto } from 'src/dtos/update-mesa.dto';
+import { Mesa } from 'src/entities/mesa.entity';
 
 @Injectable()
 export class MesasService {
