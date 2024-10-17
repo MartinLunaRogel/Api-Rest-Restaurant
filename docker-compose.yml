@@ -8,6 +8,8 @@ services:
       POSTGRES_DB: restaurantDB
     ports:
       - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
   api_rest:
     build:
       context: .
@@ -22,3 +24,6 @@ services:
       - port=5432          
       - name=restaurantDB  
       - pass=TheBestPassword 
+
+volumes:
+  postgres_data:

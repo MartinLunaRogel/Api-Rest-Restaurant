@@ -59,6 +59,16 @@ export class MeserosService {
     return mesero;
   }
 
+  async updateMesero(id: string, updateMeseroDto: UpdateMeseroDto): Promise<Mesero> {
+    const mesero = await this.meserosRepository.findOne({where: {idMesero: id}});
+    if (!mesero) {
+      throw new NotFoundException(`Mesero con ID ${id} no encontrado`);
+    }
+
+    Object.assign(mesero, updateMeseroDto);
+    return this.meserosRepository.save(mesero);
+  }
+
   async update(id: string, updateMeseroDto: UpdateMeseroDto): Promise<Mesero> {
     const meseroExistente = await this.meserosRepository.findOne({ where: { idMesero: id }, relations: ['mesas'] });
     

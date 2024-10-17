@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put } from '@nestjs/common';
 import { MesasService } from 'src/services/mesas.service';
 import { CreateMesaDto } from 'src/dtos/create-mesa.dto';
 import { UpdateMesaDto } from 'src/dtos/update-mesa.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { Mesa } from 'src/entities/mesa.entity';
 
 @ApiTags('Mesas')
 @Controller('mesas')
@@ -27,6 +28,11 @@ export class MesasController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.mesasService.findOne(+id);
+  }
+
+  @Put(':id')
+  async updateMesa(@Param('id') id: number, @Body() updateMesaDto: UpdateMesaDto): Promise<Mesa> {
+    return this.mesasService.updateMesa(id, updateMesaDto);
   }
 
   @Patch(':id')

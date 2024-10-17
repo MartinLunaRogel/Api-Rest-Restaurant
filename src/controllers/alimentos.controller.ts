@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put } from '@nestjs/common';
 import { AlimentosService } from 'src/services/alimentos.service';
 import { CreateAlimentoDto } from 'src/dtos/create-alimento.dto';
 import { UpdateAlimentoDto } from 'src/dtos/update-alimento.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { filter } from 'rxjs';
+import { Alimento } from 'src/entities/alimento.entity';
 
 @ApiTags('Alimentos y Bebidas')
 @Controller('alimentos')
@@ -28,6 +29,11 @@ export class AlimentosController {
     @Get(':id')
     findOne(@Param('id') id: string) {
         return this.alimentosService.findOne(+id);
+    }
+
+    @Put(':id')
+    async updateAlimento(@Param('id') id: number, @Body() updateAlimentoDto: UpdateAlimentoDto): Promise<Alimento> {
+        return this.alimentosService.updateAlimento(id, updateAlimentoDto);
     }
 
     @Patch(':id')

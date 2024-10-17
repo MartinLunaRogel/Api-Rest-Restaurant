@@ -38,6 +38,17 @@ export class MesasService {
     return mesa;
   }
 
+  async updateMesa(id: number, updateMesaDto: UpdateMesaDto): Promise<Mesa> {
+    const mesa = await this.mesasRepository.findOneBy({idMesa: id});
+    if (!mesa) {
+      throw new NotFoundException(`Mesa con ID ${id} no encontrada`);
+    }
+
+    // Actualizar las propiedades de la mesa
+    Object.assign(mesa, updateMesaDto);
+    return this.mesasRepository.save(mesa);
+  }
+
   async update(id: number, updateMesaDto: UpdateMesaDto) {
     const mesaToUpdate = await this.mesasRepository.preload({
       idMesa: id,

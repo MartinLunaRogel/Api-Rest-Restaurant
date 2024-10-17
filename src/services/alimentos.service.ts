@@ -38,6 +38,17 @@ export class AlimentosService {
         return alimento;
     }
 
+    async updateAlimento(id: number, updateAlimentoDto: UpdateAlimentoDto): Promise<Alimento> {
+        const alimento = await this.alimentoRepository.findOneBy({ idProducto: id });
+        
+        if (!alimento) {
+          throw new NotFoundException(`Alimento con ID ${id} no encontrado`);
+        }
+    
+        Object.assign(alimento, updateAlimentoDto);
+        return this.alimentoRepository.save(alimento);
+    }
+
     async update(id: number, updateAlimentoDto: UpdateAlimentoDto) {
         const alimentoToUpdate = await this.alimentoRepository.preload({
             idProducto: id,
