@@ -44,7 +44,6 @@ export class MesasService {
       throw new NotFoundException(`Mesa con ID ${id} no encontrada`);
     }
 
-    // Actualizar las propiedades de la mesa
     Object.assign(mesa, updateMesaDto);
     return this.mesasRepository.save(mesa);
   }
