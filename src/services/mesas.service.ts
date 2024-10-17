@@ -16,9 +16,21 @@ export class MesasService {
     return this.mesasRepository.save(createMesaDto);
   }
 
-  findAll() {
-    return this.mesasRepository.find();
+  async findAll(filterField: string, filterValue: string, page: number, limit: number) {
+    const [items, total] = await this.mesasRepository.findAndCount({
+      where: { [filterField]: filterValue },
+      take: limit,
+      skip: (page - 1) * limit,
+    });
+    
+    return {
+      data: items,
+      total,
+      page,
+      limit,
+    };
   }
+  
 
   async findOne(id: number) {
     const mesa = await this.mesasRepository.findOneBy({ idMesa: id });

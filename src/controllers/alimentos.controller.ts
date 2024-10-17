@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { AlimentosService } from 'src/services/alimentos.service';
 import { CreateAlimentoDto } from 'src/dtos/create-alimento.dto';
 import { UpdateAlimentoDto } from 'src/dtos/update-alimento.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { filter } from 'rxjs';
 
 @ApiTags('Alimentos y Bebidas')
 @Controller('alimentos')
@@ -15,8 +16,13 @@ export class AlimentosController {
     }
 
     @Get()
-    findAll() {
-        return this.alimentosService.findAll();
+    async findAll(
+        @Query('filterField') filterField: string,
+        @Query('filterValue') filterValue: string,
+        @Query('page') page: number = 1,
+        @Query("limit") limit: number = 10
+    ){
+        return this.alimentosService.findAll(filterField, filterValue, page, limit);
     }
 
     @Get(':id')

@@ -17,9 +17,20 @@ export class AlimentosService {
         return this.alimentoRepository.save(alimento);
     }
 
-    findAll() {
-        return this.alimentoRepository.find();
-    }
+    async findAll(filterField: string, filterValue: string, page: number, limit: number) {
+        const [items, total] = await this.alimentoRepository.findAndCount({
+          where: { [filterField]: filterValue },
+          take: limit,
+          skip: (page - 1) * limit,
+        });
+        
+        return {
+          data: items,
+          total,
+          page,
+          limit,
+        };
+      }
 
     findOne(id: number) {
         const alimento = this.alimentoRepository.findOneBy({ idProducto: id });

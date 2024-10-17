@@ -18,7 +18,6 @@ export class MeserosService {
   async create(createMeseroDto: CreateMeseroDto): Promise<Mesero> {
     const mesas = [];
 
-    // Itera sobre los ID de mesas para verificar que existen
     for (const idMesa of createMeseroDto.idMesas) {
       const mesa = await this.mesasRepository.findOne({ where: { idMesa } });
 
@@ -28,22 +27,32 @@ export class MeserosService {
       mesas.push(mesa);
     }
 
-    // Crea un nuevo mesero y asigna las mesas verificadas
     const mesero = this.meserosRepository.create({
       ...createMeseroDto,
-      mesas, // Asigna el array de mesas
+      mesas, 
     });
 
-    // Guarda el mesero en la base de datos
     return await this.meserosRepository.save(mesero);
   }
 
-  findAll() {
-    return this.meserosRepository.find({ relations: ['mesas'] }); // Cambiado de idMesas a mesas
+  async findAll(filterField: string, filterValue: string, page: number, limit: number) {
+    const [items, total] = await this.meserosRepository.findAndCount({
+      where: { [filterField]: filterValue },
+      take: limit,
+      skip: (page - 1) * limit,
+    });
+    
+    return {
+      data: items,
+      total,
+      page,
+      limit,
+    };
   }
+  
 
   async findOne(id: string) {
-    const mesero = await this.meserosRepository.findOne({ where: { idMesero: id }, relations: ['mesas'] }); // Cambiado de idMesas a mesas
+    const mesero = await this.meserosRepository.findOne({ where: { idMesero: id }, relations: ['mesas'] }); 
     if (!mesero) {
       throw new NotFoundException('Mesero no encontrado');
     }
@@ -57,16 +66,14 @@ export class MeserosService {
       throw new NotFoundException('Mesero no encontrado');
     }
   
-    // Si se proporciona idMesas en la solicitud, agregarlas
     if (updateMeseroDto.idMesas) {
       for (const idMesa of updateMeseroDto.idMesas) {
         const mesa = await this.mesasRepository.findOne({ where: { idMesa } });
         if (!mesa) {
           throw new NotFoundException(`La mesa con ID ${idMesa} no existe`);
         }
-        // Comprobar si la mesa ya está asociada antes de agregarla
         if (!meseroExistente.mesas.some(existingMesa => existingMesa.idMesa === mesa.idMesa)) {
-          meseroExistente.mesas.push(mesa); // Agregar la instancia de mesa
+          meseroExistente.mesas.push(mesa); 
         }
       }
     }

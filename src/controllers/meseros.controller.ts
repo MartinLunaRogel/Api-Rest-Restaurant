@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { MeserosService } from 'src/services/meseros.service';
 import { CreateMeseroDto } from 'src/dtos/create-mesero.dto';
 import { UpdateMeseroDto } from 'src/dtos/update-mesero.dto';
@@ -15,8 +15,13 @@ export class MeserosController {
   }
 
   @Get()
-  findAll() {
-    return this.meserosService.findAll();
+  async findAll(
+    @Query('filterField') filterField: string, 
+    @Query('filterValue') filterValue: string,   
+    @Query('page') page: number = 1,             
+    @Query('limit') limit: number = 10           
+  ) {
+    return this.meserosService.findAll(filterField, filterValue, page, limit);
   }
 
   @Get(':id')

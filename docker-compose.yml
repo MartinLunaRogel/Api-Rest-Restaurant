@@ -18,3 +18,7 @@ services:
       - '3000:3000'
     environment:
       - NODE_ENV=development
+      - host=api_rest_db   
+      - port=5432          
+      - name=restaurantDB  
+      - pass=TheBestPassword 

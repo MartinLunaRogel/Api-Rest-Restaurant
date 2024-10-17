@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { MesasService } from 'src/services/mesas.service';
 import { CreateMesaDto } from 'src/dtos/create-mesa.dto';
 import { UpdateMesaDto } from 'src/dtos/update-mesa.dto';
@@ -15,8 +15,13 @@ export class MesasController {
   }
 
   @Get()
-  findAll() {
-    return this.mesasService.findAll();
+  async findAll(
+    @Query('filterField') filterField: string, 
+    @Query('filterValue') filterValue: string,   
+    @Query('page') page: number = 1,            
+    @Query('limit') limit: number = 10          
+  ) {
+    return this.mesasService.findAll(filterField, filterValue, page, limit);
   }
 
   @Get(':id')
