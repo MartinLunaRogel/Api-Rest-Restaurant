@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put, UseInterceptors } from '@nestjs/common';
 import { MesasService } from 'src/services/mesas.service';
 import { CreateMesaDto } from 'src/dtos/create-mesa.dto';
 import { UpdateMesaDto } from 'src/dtos/update-mesa.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Mesa } from 'src/entities/mesa.entity';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @ApiTags('Mesas')
 @Controller('mesas')
@@ -16,6 +17,7 @@ export class MesasController {
   }
 
   @Get()
+  @UseInterceptors(CacheInterceptor)
   async findAll(
     @Query('filterField') filterField: string, 
     @Query('filterValue') filterValue: string,   
@@ -26,6 +28,7 @@ export class MesasController {
   }
 
   @Get(':id')
+  @UseInterceptors(CacheInterceptor)
   findOne(@Param('id') id: string) {
     return this.mesasService.findOne(+id);
   }

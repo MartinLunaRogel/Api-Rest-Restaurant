@@ -4,7 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { MeserosModule } from 'src/modules/meseros.module';
 import { MesasModule } from 'src/modules/mesas.module';
 import { AlimentosModule } from 'src/modules/alimentos.module';
-
+import { CacheModule } from './modules/cache.module';
 
 @Module({
   imports: [
@@ -23,6 +23,7 @@ import { AlimentosModule } from 'src/modules/alimentos.module';
     MeserosModule,
     MesasModule,
     AlimentosModule,
+    CacheModule,
   ],
   controllers: [],
   providers: [],
