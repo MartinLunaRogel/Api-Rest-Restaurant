@@ -75,12 +75,15 @@ export class MeserosService {
   }
 
   async update(id: string, updateMeseroDto: UpdateMeseroDto): Promise<Mesero> {
-    const meseroExistente = await this.meserosRepository.findOne({ where: { idMesero: id }, relations: ['mesas'] });
-    
+    const meseroExistente = await this.meserosRepository.preload({
+      idMesero: id,
+      ...updateMeseroDto,
+    });
+
     if (!meseroExistente) {
       throw new NotFoundException('Mesero no encontrado');
     }
-  
+
     if (updateMeseroDto.idMesas) {
       for (const idMesa of updateMeseroDto.idMesas) {
         const mesa = await this.mesasRepository.findOne({ where: { idMesa } });
@@ -92,7 +95,7 @@ export class MeserosService {
         }
       }
     }
-  
+
     const updatedMesero = await this.meserosRepository.save(meseroExistente);
     await this.cacheManager.store.reset();
     return updatedMesero;
