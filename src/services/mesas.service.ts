@@ -1,19 +1,23 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateMesaDto } from 'src/dtos/create-mesa.dto';
 import { UpdateMesaDto } from 'src/dtos/update-mesa.dto';
 import { Mesa } from 'src/entities/mesa.entity';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from '@nestjs/cache-manager';
 
 @Injectable()
 export class MesasService {
   constructor(
     @InjectRepository(Mesa)
     private mesasRepository: Repository<Mesa>,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   create(createMesaDto: CreateMesaDto) {
-    return this.mesasRepository.save(createMesaDto);
+    const mesa = this.mesasRepository.create(createMesaDto);
+    return this.mesasRepository.save(mesa);
   }
 
   async findAll(filterField: string, filterValue: string, page: number, limit: number) {
@@ -45,7 +49,9 @@ export class MesasService {
     }
 
     Object.assign(mesa, updateMesaDto);
-    return this.mesasRepository.save(mesa);
+    const updatedMesa = await this.mesasRepository.save(mesa);
+    await this.cacheManager.store.reset();
+    return updatedMesa;
   }
 
   async update(id: number, updateMesaDto: UpdateMesaDto) {
@@ -54,10 +60,14 @@ export class MesasService {
       ...updateMesaDto,
     });
     if (!mesaToUpdate) throw new NotFoundException("Mesa no encontrada");
-    return this.mesasRepository.save(mesaToUpdate);
+    const updatedMesa = await this.mesasRepository.save(mesaToUpdate);
+    await this.cacheManager.store.reset();
+    return updatedMesa;
+    
   }
 
   remove(id: number) {
+    this.cacheManager.store.reset();
     return this.mesasRepository.delete({ idMesa: id });
   }
 }

@@ -1,10 +1,12 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'; 
+import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common'; 
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateMeseroDto } from 'src/dtos/create-mesero.dto';
 import { UpdateMeseroDto } from 'src/dtos/update-mesero.dto';
 import { Mesero } from 'src/entities/mesero.entity';
 import { Mesa } from 'src/entities/mesa.entity';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from '@nestjs/cache-manager';
 
 @Injectable()
 export class MeserosService {
@@ -13,6 +15,7 @@ export class MeserosService {
     private meserosRepository: Repository<Mesero>,
     @InjectRepository(Mesa)
     private mesasRepository: Repository<Mesa>,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   async create(createMeseroDto: CreateMeseroDto): Promise<Mesero> {
@@ -66,7 +69,9 @@ export class MeserosService {
     }
 
     Object.assign(mesero, updateMeseroDto);
-    return this.meserosRepository.save(mesero);
+    const updatedMesero = await this.meserosRepository.save(mesero);
+    await this.cacheManager.store.reset();
+    return updatedMesero;
   }
 
   async update(id: string, updateMeseroDto: UpdateMeseroDto): Promise<Mesero> {
@@ -88,7 +93,9 @@ export class MeserosService {
       }
     }
   
-    return this.meserosRepository.save(meseroExistente);
+    const updatedMesero = await this.meserosRepository.save(meseroExistente);
+    await this.cacheManager.store.reset();
+    return updatedMesero;
   }
   
   
@@ -97,6 +104,7 @@ export class MeserosService {
   async remove(id: string) {
     const mesero = await this.findOne(id);
     await this.mesasRepository.update({idMesero: mesero}, {idMesero: null});
+    this.cacheManager.store.reset();
     return this.meserosRepository.remove(mesero);
   }
 }
