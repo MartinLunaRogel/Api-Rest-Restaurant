@@ -10,11 +10,13 @@ services:
       - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    container_name: restaurantDB
 
   redis:
     image: redis:latest
     ports:
       - '6379:6379'
+    container_name: redis
 
   api_rest:
     build:
@@ -33,6 +35,7 @@ services:
       - pass=TheBestPassword
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+    container_name: API_Restaurant
 
 volumes:
   postgres_data:
