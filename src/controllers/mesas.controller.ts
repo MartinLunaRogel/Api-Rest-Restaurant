@@ -128,6 +128,9 @@ export class MesasController {
         if (!updateMesaDto.idProducto) {
           throw new EmptyFieldException('El campo idProducto es obligatorio (ingresar como arreglo)');
         }
+        if (!updateMesaDto.totalCuenta) {
+            throw new EmptyFieldException('El campo totalCuenta es obligatorio (ingresar como arreglo)');
+        }
     }
 
     private handleException(error: any) {

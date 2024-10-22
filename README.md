@@ -1,28 +1,45 @@
-# REST API de Restaurante
+# Proyecto API REST para Restaurante
 
-Esta es una REST API para la gestión de alimentos, mesas y meseros en un restaurante, desarrollada con NestJS y TypeORM.
+Este proyecto es una API REST para gestionar los recursos de un restaurante, como alimentos, mesas y meseros, utilizando **NestJS**, **TypeORM**, **PostgreSQL** y **Redis** para la caché. El entorno está completamente dockerizado.
 
 ## Tecnologías Utilizadas
 
-- **NestJS**: Framework para construir aplicaciones del lado del servidor.
-- **TypeORM**: ORM para TypeScript y JavaScript.
-- **PostgreSQL**: Sistema de gestión de bases de datos relacional.
-- **Redis**: Almacenamiento en caché para mejorar el rendimiento.
-- **Docker**: Contenerización de la aplicación para facilitar el despliegue.
-- **Swagger**: Documentación de la API.
+- [x] **NestJS**: Framework para construir aplicaciones del lado del servidor.
+- [x] **TypeORM**: ORM para gestionar la base de datos relacional.
+- [x] **PostgreSQL**: Base de datos relacional utilizada en el proyecto.
+- [x] **Redis**: Sistema de caché externo para mejorar el rendimiento.
+- [x] **Swagger**: Documentación automática de API.
+- [x] **Docker**: Contenerización y despliegue de servicios.
+- [x] **Docker Compose**: Orquestación de contenedores para el entorno de desarrollo.
+- [x] **npm**: Gestor de paquetes para instalar dependencias del proyecto.
 
 ## Requisitos Previos
 
-- Tener Docker instalado
+- [x] **Docker** instalados en tu máquina.
+- [x] **DataGrip**: Herramienta de administración de bases de datos.
 
-## Instalación y Uso
+## Instalación
 
-Asegúrate de que el archivo `.env` esté correctamente configurado con tus credenciales de base de datos y Redis.
+1. Clona el repositorio:
+```bash
+   git clone https://github.com/usuario/restaurante-api.git
+ ```
+2. Accede el directoriodel proyecto:
+```bash
+   cd restaurante-api
+```
+3. Crea tus variables de entorno en tu archivo .env
 
-Ejecuta el siguiente comando para descargar e iniciar todos los servicios:
+4. Iniciar los servicios y descargar las dependencias:
+```bash
+   docker-compose up
+```
 
--> docker-compose up
+## Uso
 
-Una vez que los contenedores estén en funcionamiento, puedes acceder a la API en http://localhost:3000/api.
+1. Uso del Swagger
+Una vez que este corriendo, puedes acceder a la docunmentación y uso del API en Swagger a travez de la siguiente URL:
+```bash
+   http://localhost:3000/api
+```
 
-La documentación de la API está disponible en http://localhost:3000/api.
