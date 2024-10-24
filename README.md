@@ -22,7 +22,7 @@ Este proyecto es una API REST para gestionar los recursos de un restaurante, com
 
 1. Clona el repositorio:
 ```bash
-   git clone https://github.com/usuario/restaurante-api.git
+   git clone https://github.com/MartinLunaRogel/Api-Rest-Restaurant.git
  ```
 2. Accede el directoriodel proyecto:
 ```bash
