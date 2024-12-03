@@ -32,7 +32,7 @@ Este proyecto es una API REST para gestionar los recursos de un restaurante, com
 
 4. Iniciar los servicios y descargar las dependencias:
 ```bash
-   docker-compose up
+   docker-compose up --build
 ```
 
 ## Uso
